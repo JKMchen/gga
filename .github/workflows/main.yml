@@ -1,24 +1,24 @@
-name: Dagger - CPU, User & Hostname Check
+name: Dagger - Run lscpu
 
 on:
   push:
     branches:
       - main
   pull_request:
-  workflow_dispatch:
+  workflow_dispatch:  # bisa di-trigger manual dari GitHub UI
 
 jobs:
-  info-check:
+  show-cpu:
     runs-on: ubuntu-latest
-    name: Show System Info via Dagger Cloud
+    name: Show CPU Info via Dagger Cloud
     steps:
       - name: Checkout repo
         uses: actions/checkout@v4
 
-      - name: Run whoami, hostname, lscpu in Dagger
+      - name: Run lscpu in Dagger container
         uses: dagger/dagger-for-github@v8.2.0
         with:
           version: latest
-          shell: container | from ubuntu:24.04 | with-exec sh -c "echo 'Whoami:' && whoami && echo 'Hostname:' && hostname && echo 'Full lscpu:' && lscpu" | stdout
+          shell: container | from ubuntu:24.04 | with-exec lscpu | stdout
           cloud-token: ${{ secrets.DAGGER_CLOUD_TOKEN }}
-          debug: true  # optional, biar log detail
+          debug: true  # biar log lebih detail kalau ada issue
