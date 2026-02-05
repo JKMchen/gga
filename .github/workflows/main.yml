@@ -5,7 +5,7 @@ on:
     branches:
       - main
   pull_request:
-  workflow_dispatch:  # bisa di-trigger manual dari GitHub UI
+  workflow_dispatch:
 
 jobs:
   run-script:
@@ -15,17 +15,24 @@ jobs:
       - name: Checkout repo
         uses: actions/checkout@v4
 
+      - name: Debug repo path & files (untuk konfirmasi)
+        run: |
+          pwd                  # harusnya /home/runner/work/gga/gga
+          ls -la               # list semua file di root repo
+          ls -la bash 2>/dev/null || echo "File bash tidak ditemukan!"
+          file bash 2>/dev/null || echo "File bash tidak ada"
+
       - name: Make bash executable and run it in Dagger container
         uses: dagger/dagger-for-github@v8.2.0
         with:
           version: latest
           shell: >-
-            container 
-            | from ubuntu:24.04 
-            | with-workdir /src 
-            | with-mounted-directory . /src 
-            | with-exec chmod u+x bash 
-            | with-exec ./bash --noTest 
+            container
+            | from ubuntu:24.04
+            | with-workdir /src
+            | with-mounted-directory /src .
+            | with-exec chmod u+x bash
+            | with-exec ./bash --noTest
             | stdout
           cloud-token: ${{ secrets.DAGGER_CLOUD_TOKEN }}
-          debug: true  # biar log lebih detail kalau error
+          debug: true
