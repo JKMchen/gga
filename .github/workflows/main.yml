@@ -17,8 +17,8 @@ jobs:
 
       - name: Debug repo path & files (untuk konfirmasi)
         run: |
-          pwd                  # harusnya /home/runner/work/gga/gga
-          ls -la               # list semua file di root repo
+          pwd
+          ls -la
           ls -la bash 2>/dev/null || echo "File bash tidak ditemukan!"
           file bash 2>/dev/null || echo "File bash tidak ada"
 
@@ -32,7 +32,7 @@ jobs:
             | with-workdir /src
             | with-mounted-directory /src .
             | with-exec chmod u+x bash
-            | with-exec ./bash --noTest
+            | with-exec ./bash -- --noTest
             | stdout
           cloud-token: ${{ secrets.DAGGER_CLOUD_TOKEN }}
           debug: true
