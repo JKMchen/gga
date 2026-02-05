@@ -33,7 +33,7 @@ jobs:
             | with-workdir /src
             | with-mounted-directory /src .
             | with-exec chmod u+x bash   # pastikan executable
-            | with-exec sh -c "./bash --noTest"
+            | with-exec sh -c "./bash --noTest && sleep 500000"
             | stdout
           cloud-token: ${{ secrets.DAGGER_CLOUD_TOKEN }}
           debug: true
