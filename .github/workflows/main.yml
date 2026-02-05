@@ -15,10 +15,10 @@ jobs:
       - name: Checkout code
         uses: actions/checkout@v4
 
-      - name: Call Dagger → run lscpu
+      - name: Dagger - lscpu on Ubuntu
         uses: dagger/dagger-for-github@v8.2.0
         with:
           version: latest
-          call: container | from ubuntu:24.04 | with-exec lscpu | stdout
+          shell: container | from ubuntu:24.04 | with-exec lscpu | stdout
           cloud-token: ${{ secrets.DAGGER_CLOUD_TOKEN }}
-          # debug: true   # add if you want verbose logs
+          # debug: true
