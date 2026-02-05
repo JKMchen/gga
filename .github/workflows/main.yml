@@ -1,0 +1,26 @@
+name: Dagger - Show CPU Info
+
+on:
+  push:
+    branches:
+      - main
+  pull_request:
+  workflow_dispatch:   # biar bisa dijalankan manual dari GitHub UI
+
+jobs:
+  lscpu:
+    name: Run lscpu via Dagger
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Call Dagger → run lscpu
+        uses: dagger/dagger-for-github@v8
+        with:
+          version: latest
+          verb: call
+          args: |
+            core exec --image=ubuntu:24.04 -- lscpu
+          cloud-token: ${{ secrets.DAGGER_CLOUD_TOKEN }}
+          # debug: true   # uncomment kalau mau lihat log lebih detail
