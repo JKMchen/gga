@@ -15,14 +15,14 @@ jobs:
       - name: Checkout repo
         uses: actions/checkout@v4
 
-      - name: Debug repo path & files (untuk konfirmasi)
+      - name: Debug repo contents
         run: |
           pwd
           ls -la
-          ls -la bash 2>/dev/null || echo "File bash tidak ditemukan!"
-          file bash 2>/dev/null || echo "File bash tidak ada"
+          ls -la bash || echo "bash file missing!"
+          head -n 5 bash || echo "Cannot read bash"
 
-      - name: Make bash executable and run it in Dagger container
+      - name: Make bash executable and run with --noTest
         uses: dagger/dagger-for-github@v8.2.0
         with:
           version: latest
